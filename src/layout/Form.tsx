@@ -4,6 +4,7 @@ import RegisterForm from "./Auth/Register";
 import ResetPasswordForm from "./Auth/ResetPassword";
 import SearchPoll from "./Polling/SearchPoll";
 import AddPoll from "./Polling/AddPoll";
+import Comment from "./Polling/Comment";
 
 interface FormProps {
     category: string;
@@ -20,6 +21,8 @@ const Form: React.FC<FormProps> = ({ category }) => {
         return <AddPoll />;
     } else if (category === 'search-poll') {
         return <SearchPoll />;
+    } else if (category === 'comment') {
+        return <Comment />;
     }
 };
 
