@@ -2,8 +2,8 @@ import React from "react";
 import LoginForm from "./Auth/Login";
 import RegisterForm from "./Auth/Register";
 import ResetPasswordForm from "./Auth/ResetPassword";
-import SearchPoll from "./home/SearchPoll";
-import AddPoll from "./home/AddPoll";
+import SearchPoll from "./Polling/SearchPoll";
+import AddPoll from "./Polling/AddPoll";
 
 interface FormProps {
     category: string;
