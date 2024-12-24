@@ -1,7 +1,10 @@
+'use client';
+import NavBar from "@/components/ui/navbar";
+
 export default function Home() {
-  return (
-    <>
-      <p className="text-red-700">hello world</p>
-    </>
-  );
+    return (
+        <>
+            <NavBar />
+        </>
+    );
 }
