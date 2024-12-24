@@ -45,16 +45,16 @@ const NavBar = () => {
                         <li className="nav-item">
                             <Link href="/">
                                 <div className="flex flex-row text-white items-center cursor-pointer">
-                                    <IoMdAddCircle size={20} />
-                                    <div className="me-1 ms-1">Create Polling</div>
+                                    <IoMdAddCircle size={20} className='text-[#999999]' />
+                                    <p className="me-1 ms-1">Create Polling</p>
                                 </div>
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link href="/history">
                                 <div className="flex flex-row text-white items-center cursor-pointer">
-                                    <MdOutlineHistoryToggleOff size={25} />
-                                    <div className="me-1 ms-1">History</div>
+                                    <MdOutlineHistoryToggleOff size={25} className='text-[#999999]' />
+                                    <p className="me-1 ms-1">History</p>
                                 </div>
                             </Link>
                         </li>
