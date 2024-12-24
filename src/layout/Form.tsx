@@ -1,6 +1,7 @@
 import React from "react";
 import LoginForm from "./Auth/Login";
 import RegisterForm from "./Auth/Register";
+import ResetPasswordForm from "./Auth/ResetPassword";
 
 interface FormProps {
     category: string;
@@ -11,6 +12,8 @@ const Form: React.FC<FormProps> = ({ category }) => {
         return <LoginForm />;
     } else if (category === "register") {
         return <RegisterForm />;
+    } else if (category === "reset-password") {
+        return <ResetPasswordForm />;
     }
 };
 
