@@ -70,7 +70,7 @@ const NavBar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link href="/history">
+                                <Link href="/list-polling">
                                     {isTabletOrMobile ? (
                                         <p className="me-1 ms-1 text-[#999999]">New Polling</p>
                                     ) : (
@@ -82,7 +82,7 @@ const NavBar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link href="/history">
+                                <Link href="/my-polling">
                                     {isTabletOrMobile ? (
                                         <p className="me-1 ms-1 text-[#999999]">My Polling</p>
                                     ) : (
