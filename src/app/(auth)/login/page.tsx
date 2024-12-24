@@ -16,6 +16,9 @@ const LoginPage = () => {
                         <div className="text-white ms-1">Register</div>
                     </div>
                     <Form category="login" />
+                    <a href="/reset-password" className="text-[#999999] text-sm flex justify-end me-4 mt-1">
+                        <p>Forgot Password</p>
+                    </a>
                 </div>
             </section>
         </>
