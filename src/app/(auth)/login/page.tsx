@@ -19,7 +19,7 @@ const LoginPage = () => {
                         </Link>
                     </div>
                     <Form category="login" />
-                    <Link href="/register">
+                    <Link href="/reset-password">
                         <p className="text-[#999999] text-sm flex justify-end me-4 mt-1 underline">Forgot Password</p>
                     </Link>
                 </div>
