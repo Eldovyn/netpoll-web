@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import NavBar from '@/components/ui/navbar';
 import React, { useEffect } from 'react';
 import { redirect } from 'next/navigation';
-import { MdOutlineAdd } from 'react-icons/md';
+import { MdOutlineAdd, MdSaveAlt } from 'react-icons/md';
 import {
     Card,
     CardContent,
@@ -51,8 +51,8 @@ const Polling = () => {
                             <div className="flex flex-row justify-center mt-3">
                                 <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
                                     <div className="flex flex-row text-white items-center cursor-pointer">
-                                        <MdOutlineAdd size={16} className="text-[#999999]" />
-                                        <p className="me-1 ms-1">Create Polling</p>
+                                        <MdSaveAlt size={16} className="text-[#999999]" />
+                                        <p className="me-1 ms-1">Save Polling</p>
                                     </div>
                                 </Button>
                                 <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
@@ -64,7 +64,13 @@ const Polling = () => {
                                 <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
                                     <div className="flex flex-row text-white items-center cursor-pointer">
                                         <FaShareAlt size={16} className="text-[#999999]" />
-                                        <p className="me-1 ms-1">Result Polling</p>
+                                        <p className="me-1 ms-1">Share Polling</p>
+                                    </div>
+                                </Button>
+                                <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
+                                    <div className="flex flex-row text-white items-center cursor-pointer">
+                                        <MdOutlineAdd size={16} className="text-[#999999]" />
+                                        <p className="me-1 ms-1">Create Polling</p>
                                     </div>
                                 </Button>
                             </div>
