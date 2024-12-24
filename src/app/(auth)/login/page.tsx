@@ -2,6 +2,7 @@
 import Image from "next/image";
 import IconForm from "../../../../public/icon_from_1.png";
 import Form from "@/layout/Form";
+import Link from "next/link";
 
 
 const LoginPage = () => {
@@ -13,12 +14,14 @@ const LoginPage = () => {
                     <h1 className="text-white text-center text-xl font-semibold pb-2">Welcome Back</h1>
                     <div className="flex flex-row mb-2 justify-center text-sm">
                         <div className="text-[#999999] me-1">Don't have an account?</div>
-                        <div className="text-white ms-1">Register</div>
+                        <Link href="/register">
+                            <div className="text-blue-500 hover:text-blue-600 underline ms-1">Register</div>
+                        </Link>
                     </div>
                     <Form category="login" />
-                    <a href="/reset-password" className="text-[#999999] text-sm flex justify-end me-4 mt-1">
-                        <p>Forgot Password</p>
-                    </a>
+                    <Link href="/register">
+                        <p className="text-[#999999] text-sm flex justify-end me-4 mt-1 underline">Forgot Password</p>
+                    </Link>
                 </div>
             </section>
         </>

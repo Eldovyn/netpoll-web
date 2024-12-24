@@ -31,7 +31,7 @@ const LoginForm = () => {
                     </div>
                 </div>
             </form>
-            <Button className="bg-blue-700 w-[93%] flex mx-auto rounded-md mt-5">Login</Button>
+            <Button className="bg-blue-700 w-[93%] flex mx-auto rounded-md mt-5 hover:bg-blue-800">Login</Button>
         </>
     )
 }
