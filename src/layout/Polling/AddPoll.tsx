@@ -59,7 +59,6 @@ const AddPoll = () => {
         <>
             <form action="">
                 <div className="mb-3">
-                    <Label htmlFor="question">Your Question</Label>
                     <div className="mb-5 relative">
                         <FaQuestion className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={15} />
                         <Textarea placeholder="question" className="pl-10 pt-7 pb-2 w-full text-white" id="question" />
