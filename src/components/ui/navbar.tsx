@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import IconWeb from '../../../public/icon_from_1.png';
 import { useState } from 'react';
-import { IoMdAddCircle } from "react-icons/io";
+import { MdOutlineAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import { IoSaveSharp } from "react-icons/io5";
 
@@ -46,8 +46,8 @@ const NavBar = () => {
                         <li className="nav-item">
                             <Link href="/">
                                 <div className="flex flex-row text-white items-center cursor-pointer">
-                                    <IoMdAddCircle size={20} className='text-[#999999]' />
-                                    <p className="me-1 ms-1">Create Polling</p>
+                                    <MdOutlineAdd size={20} className='text-[#999999]' />
+                                    <p className="ms-1">Create Polling</p>
                                 </div>
                             </Link>
                         </li>
