@@ -3,7 +3,8 @@ import Image from 'next/image';
 import IconWeb from '../../../public/icon_from_1.png';
 import { useState } from 'react';
 import { IoMdAddCircle } from "react-icons/io";
-import { MdOutlineHistoryToggleOff } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
+import { IoSaveSharp } from "react-icons/io5";
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -53,8 +54,16 @@ const NavBar = () => {
                         <li className="nav-item">
                             <Link href="/history">
                                 <div className="flex flex-row text-white items-center cursor-pointer">
-                                    <MdOutlineHistoryToggleOff size={25} className='text-[#999999]' />
-                                    <p className="me-1 ms-1">History</p>
+                                    <FaSearch size={15} className='text-[#999999]' />
+                                    <p className="me-1 ms-1">New Polling</p>
+                                </div>
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link href="/history">
+                                <div className="flex flex-row text-white items-center cursor-pointer">
+                                    <IoSaveSharp size={16} className='text-[#999999]' />
+                                    <p className="me-1 ms-1">My Polling</p>
                                 </div>
                             </Link>
                         </li>
