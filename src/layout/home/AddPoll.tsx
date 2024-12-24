@@ -37,14 +37,14 @@ const AddPoll = () => {
                     <MdQuestionAnswer className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={15} />
                     <Input
                         placeholder="Option"
-                        className="pl-10 w-full text-white rounded-r-none border-r-0 h-10"
+                        className="pl-10 w-full text-white rounded-r-none border-r-0"
                         type="text"
                         id={`option-${prevOptions.length}`}
                     />
                 </div>
                 <Button
                     type="button"
-                    className="bg-red-700 text-white px-4 h-10 rounded-l-none rounded-r-md border border-l-0 hover:bg-red-800" onClick={() => removeOption(prevOptions.length)}
+                    className="bg-red-700 text-white px-4 rounded-l-none rounded-r-md border border-l-0 hover:bg-red-800" onClick={() => removeOption(prevOptions.length)}
                 >
                     <div className="flex flex-row text-white items-center cursor-pointer">
                         <MdDelete size={20} className="text-[#999999]" />
@@ -68,7 +68,7 @@ const AddPoll = () => {
                 <Label htmlFor="options" className="text-white">Answer Options</Label>
                 {options.map(opt => opt)}
                 <div className="mb-3">
-                    <Button className="bg-blue-700 w-[30%] hover:bg-blue-800" type="button" onClick={addOption}>
+                    <Button className="bg-blue-700 w-[30%] hover:bg-blue-800 h-[2rem]" type="button" onClick={addOption}>
                         <div className="flex flex-row text-white items-center cursor-pointer">
                             <MdOutlineAdd size={20} className="text-[#999999]" />
                             <p className="ms-1 text-sm">Add Options</p>
