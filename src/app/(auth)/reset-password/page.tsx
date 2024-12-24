@@ -2,6 +2,7 @@
 import Image from "next/image";
 import IconForm from "../../../../public/icon_from_1.png";
 import Form from "@/layout/Form";
+import Link from "next/link";
 
 
 const ResetPasswordPage = () => {
@@ -13,7 +14,9 @@ const ResetPasswordPage = () => {
                     <h1 className="text-white text-center text-xl font-semibold pb-2">Welcome Back</h1>
                     <div className="flex flex-row mb-2 justify-center text-sm">
                         <div className="text-[#999999] me-1">Have an account?</div>
-                        <div className="text-white ms-1">Login</div>
+                        <Link href="/login">
+                            <p className="ms-1 text-blue-500 hover:text-blue-600 underline">Login</p>
+                        </Link>
                     </div>
                     <Form category="reset-password" />
                 </div>
