@@ -44,6 +44,12 @@ importers:
       react-responsive:
         specifier: ^10.0.0
         version: 10.0.0(react@19.0.0)
+      react-spinners-components:
+        specifier: ^2.0.4
+        version: 2.0.4(react@19.0.0)
+      react-toastify:
+        specifier: ^11.0.2
+        version: 11.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.5.5
@@ -1548,6 +1554,18 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       react: '>=16.8.0'
+
+  react-spinners-components@2.0.4:
+    resolution: {integrity: sha512-2aLqpDSGZ2l0CBV+OQex2ZFSqT4h1qIB9aZyURU52uNwnZvY/ztWYjIikQBaP6vSKR36pJY53PbtdpPoclE2VQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16.0.0'
+
+  react-toastify@11.0.2:
+    resolution: {integrity: sha512-GjHuGaiXMvbls3ywqv8XdWONwrcO4DXCJIY1zVLkHU73gEElKvTTXNI5Vom3s/k/M8hnkrfsqgBSX3OwmlonbA==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
 
   react@19.0.0:
     resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
@@ -3435,6 +3453,16 @@ snapshots:
       prop-types: 15.8.1
       react: 19.0.0
       shallow-equal: 3.1.0
+
+  react-spinners-components@2.0.4(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+
+  react-toastify@11.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      clsx: 2.1.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   react@19.0.0: {}
 

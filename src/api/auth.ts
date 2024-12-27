@@ -12,3 +12,5 @@ const apiRegister = async (options: UserOptions) => {
     });
     return response;
 };
+
+export { apiRegister };
