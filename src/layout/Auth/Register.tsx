@@ -4,9 +4,10 @@ import { TiUser } from "react-icons/ti";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinnerComponent from 'react-spinners-components';
-import { apiRegister } from "@/api/auth";
+import { apiRegister, apiAccountActive } from "@/api/auth";
 import { alertFailed } from "@/components/ui/alertFailed";
 import { alertSuccess } from "@/components/ui/alertSucces";
+import { useRouter } from "next/navigation";
 
 interface FormData {
     username: string;
@@ -23,6 +24,7 @@ interface FormErrors {
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const [formData, setFormData] = useState<FormData>({
         username: '',
         email: '',
@@ -33,6 +35,8 @@ const RegisterForm = () => {
         email: [],
         password: [],
     });
+
+    const { push } = useRouter();
 
     const togglePasswordVisibility = () => {
         setShowPassword(prevState => !prevState);
@@ -68,7 +72,13 @@ const RegisterForm = () => {
                 }
             }
             if (response.status === 201) {
-                alertSuccess(resp.message);
+                const response = await apiAccountActive({ email });
+                const resp = await response.json();
+                if (response.status === 201) {
+                    console.log('masuk')
+                    alertSuccess(resp.message);
+                    push(`/verification?token=${resp.data.token}`);
+                }
             }
         } catch (error) {
             console.error('Error during registration:', error);
