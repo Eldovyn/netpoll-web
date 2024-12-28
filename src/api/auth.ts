@@ -24,4 +24,15 @@ const apiAccountActive = async (options: UserOptions) => {
     return response;
 };
 
-export { apiRegister, apiAccountActive };
+const apiLogin = async (options: UserOptions) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(options),
+    });
+    return response;
+};
+
+export { apiRegister, apiAccountActive, apiLogin };

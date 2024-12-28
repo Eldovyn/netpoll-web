@@ -30,6 +30,7 @@ const RegisterForm = () => {
         email: '',
         password: '',
     });
+
     const [formErrors, setFormErrors] = useState<FormErrors>({
         username: [],
         email: [],
@@ -75,9 +76,9 @@ const RegisterForm = () => {
                 const response = await apiAccountActive({ email });
                 const resp = await response.json();
                 if (response.status === 201) {
-                    console.log('masuk')
                     alertSuccess(resp.message);
-                    push(`/verification?token=${resp.data.token}`);
+                    setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/account-active/page-verification?token=${resp.data.token}`), 5000);
+                    return;
                 }
             }
         } catch (error) {
@@ -88,7 +89,7 @@ const RegisterForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={isLoading ? () => {} : handleSubmit}>
             <div className="p-4 text-white">
                 <div className={`relative ${formErrors.username.length > 0 ? 'mb-2' : 'mb-5'}`}>
                     <TiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />

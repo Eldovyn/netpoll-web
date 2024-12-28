@@ -3,6 +3,7 @@ import Image from "next/image";
 import IconForm from "../../../../public/icon_from_1.png";
 import Form from "@/layout/Form";
 import Link from "next/link";
+import { ToastContainer } from 'react-toastify';
 
 
 const LoginPage = () => {
@@ -24,6 +25,7 @@ const LoginPage = () => {
                     </Link>
                 </div>
             </section>
+            <ToastContainer />
         </>
     );
 };
