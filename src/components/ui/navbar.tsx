@@ -7,14 +7,50 @@ import { MdOutlineAdd } from 'react-icons/md';
 import { FaSearch } from 'react-icons/fa';
 import { IoSaveSharp } from 'react-icons/io5';
 import { useMediaQuery } from 'react-responsive';
+import { RiAccountCircleFill } from "react-icons/ri";
+import { apiMe } from '@/api/auth';
+import Cookies from 'js-cookie';
+
+interface UserData {
+    access_token: string;
+    avatar: string;
+    email: string;
+    is_active: boolean;
+    user_id: string;
+    username: string;
+}
 
 const NavBar = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
+    const [accessToken, setAccessToken] = useState(Cookies.get('accessToken') || '');
+
+    const [userData, setUserData] = useState<UserData>({
+        access_token: '',
+        avatar: '',
+        email: '',
+        is_active: false,
+        user_id: '',
+        username: '',
+    });
+
     useEffect(() => {
         setIsMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (!accessToken) return;
+        const userMe = async () => {
+            const response = await apiMe(accessToken);
+            const resp = await response.json();
+            if (response.status === 200) {
+                setUserData(resp.data);
+            }
+        }
+    
+        userMe();
+    }, [accessToken]);
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
@@ -89,6 +125,27 @@ const NavBar = () => {
                                         <div className="flex flex-row text-white items-center cursor-pointer">
                                             <IoSaveSharp size={16} className="text-[#999999]" />
                                             <p className="me-1 ms-1">My Polling</p>
+                                        </div>
+                                    )}
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link href="/my-polling">
+                                    {isTabletOrMobile ? (
+                                        <p className="me-1 ms-1 text-[#999999]">Account</p>
+                                    ) : (
+                                        <div className="flex flex-row text-white items-center cursor-pointer">
+                                            {userData?.avatar ? (
+                                                <Image
+                                                    src={userData?.avatar}
+                                                    alt="User Avatar"
+                                                    width={20}
+                                                    height={20}
+                                                    className="rounded-full border border-gray-500"
+                                                />
+                                            ) : (<RiAccountCircleFill size={20} className="text-[#999999]" />
+                                            )}
+                                            <p className="me-1 ms-1">Account</p>
                                         </div>
                                     )}
                                 </Link>

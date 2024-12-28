@@ -35,4 +35,15 @@ const apiLogin = async (options: UserOptions) => {
     return response;
 };
 
-export { apiRegister, apiAccountActive, apiLogin };
+const apiMe = async (token: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/@me`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+    return response;
+};
+
+export { apiRegister, apiAccountActive, apiLogin, apiMe };

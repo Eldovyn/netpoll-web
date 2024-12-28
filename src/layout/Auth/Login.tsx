@@ -7,6 +7,7 @@ import { apiLogin, apiAccountActive } from "@/api/auth";
 import { alertFailed } from "@/components/ui/alertFailed";
 import { alertSuccess } from "@/components/ui/alertSucces";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface FormData {
     email: string;
@@ -80,6 +81,13 @@ const LoginForm = () => {
                 alertFailed(resp.message);
                 return;
             }
+            if (response.status === 201) {
+                alertSuccess(resp.message);
+                Cookies.set('accessToken', resp.data.access_token);
+                setTimeout(() => push('/'), 5000);
+                setFormData({ email: '', password: '' });
+                return;
+            }
         } catch (error) {
             console.error('Error during login:', error);
         } finally {
@@ -91,11 +99,14 @@ const LoginForm = () => {
         <>
             <form onSubmit={isLoading ? () => { } : handleSubmit}>
                 <div className="p-4 text-white">
-                    <div className="mb-5 relative">
+                    <div className={`${formErrors.email.length > 0 ? 'mb-1' : 'mb-5'} relative`}>
                         <MdEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                         <Input placeholder="email address" className="pl-10 w-full" type="text" onChange={handleInputChange} name="email" />
                     </div>
-                    <div className="mt-5 relative">
+                    {formErrors.email.map((error, index) => (
+                        <p key={index} className="text-red-500 text-sm">{error}</p>
+                    ))}
+                    <div className={`${formErrors.email.length > 0 ? 'mt-3' : ''} ${formErrors.password.length > 0 ? 'mb-1' : ''} relative`}>
                         <MdLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                         <Input
                             placeholder="password"
@@ -106,6 +117,9 @@ const LoginForm = () => {
                             {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
                         </span>
                     </div>
+                    {formErrors.password.map((error, index) => (
+                        <p key={index} className="text-red-500 text-sm">{error}</p>
+                    ))}
                 </div>
                 <Button className="bg-blue-700 w-[93%] flex mx-auto rounded-md mt-5 hover:bg-blue-800" type="submit">
                     {isLoading ? (
