@@ -46,4 +46,15 @@ const apiMe = async (token: string) => {
     return response;
 };
 
-export { apiRegister, apiAccountActive, apiLogin, apiMe };
+const apiResetPassword = async (options: UserOptions) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/reset-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(options),
+    });
+    return response;
+};
+
+export { apiRegister, apiAccountActive, apiLogin, apiMe, apiResetPassword };

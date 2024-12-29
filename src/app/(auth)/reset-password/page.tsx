@@ -3,6 +3,7 @@ import Image from "next/image";
 import IconForm from "../../../../public/icon_from_1.png";
 import Form from "@/layout/Form";
 import Link from "next/link";
+import { ToastContainer } from 'react-toastify';
 
 
 const ResetPasswordPage = () => {
@@ -19,8 +20,12 @@ const ResetPasswordPage = () => {
                         </Link>
                     </div>
                     <Form category="reset-password" />
+                    <Link href="/register">
+                        <p className="text-blue-500 hover:text-blue-600 text-sm flex justify-end me-4 mt-1 underline">Register</p>
+                    </Link>
                 </div>
             </section>
+            <ToastContainer />
         </>
     )
 };
