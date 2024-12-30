@@ -83,7 +83,7 @@ const LoginForm = () => {
                 {formErrors.email.map((error, index) => (
                     <p key={index} className="text-red-500 text-sm ms-4">{error}</p>
                 ))}
-                <Button className="bg-blue-700 hover:bg-blue-800 w-[93%] flex mx-auto rounded-md mt-2" type="submit">
+                <Button className="bg-blue-700 hover:bg-blue-800 w-[95%] flex mx-auto rounded-md mt-2" type="submit">
                     {isLoading ? (
                         <div className="flex flex-row text-white items-center cursor-pointer">
                             <LoadingSpinnerComponent type={'Spinner'} color={'white'} size={'100px'} />

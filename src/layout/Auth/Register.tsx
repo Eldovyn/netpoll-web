@@ -142,7 +142,7 @@ const RegisterForm = () => {
                     <p key={index} className="text-red-500 text-sm">{error}</p>
                 ))}
             </div>
-            <Button className={`bg-blue-700 hover:bg-blue-800 w-[93%] flex mx-auto rounded-md ${formErrors.password.length > 0 ? 'mt-1' : 'mt-5'}`} type="submit">
+            <Button className={`bg-blue-700 hover:bg-blue-800 w-[95%] flex mx-auto rounded-md ${formErrors.password.length > 0 ? 'mt-1' : 'mt-5'}`} type="submit">
                 {isLoading ? (
                     <div className="flex flex-row text-white items-center cursor-pointer">
                         <LoadingSpinnerComponent type={'Spinner'} color={'white'} size={'100px'} />
