@@ -1,6 +1,7 @@
 'use client';
 import NavBar from "@/components/ui/navbar";
 import Form from "@/layout/Form";
+import { ToastContainer } from 'react-toastify';
 
 export default function Home() {
     return (
@@ -15,6 +16,7 @@ export default function Home() {
                     <Form category="search-poll" />
                 </div>
             </section>
+            <ToastContainer />
         </>
     );
 }

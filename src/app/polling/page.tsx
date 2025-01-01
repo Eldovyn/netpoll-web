@@ -1,7 +1,7 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
 import NavBar from '@/components/ui/navbar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import { MdOutlineAdd, MdSaveAlt } from 'react-icons/md';
 import {
@@ -17,18 +17,62 @@ import { FaDatabase, FaShareAlt } from "react-icons/fa";
 import Form from '@/layout/Form';
 import Avatar from '../../../public/avatar.jpg';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
+import { apiGetPolling } from '@/api/polling';
+
+interface PollingResponse {
+    message: string;
+    data: {
+        username: string;
+        user_id: string;
+        polling: Polling;
+        answer: Answer[];
+    };
+}
+
+interface Polling {
+    polling_id: string;
+    title: string;
+    private: boolean;
+    multi_choice: boolean;
+    disable_comment: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Answer {
+    answer_id: string;
+    answer: string;
+    created_at: string;
+    updated_at: string;
+}
+
 
 
 const Polling = () => {
     const searchParams = useSearchParams();
-    const title = searchParams.get('title');
     const pollingId = searchParams.get('pollingId');
+    const [pollingData, setPollingData] = useState<PollingResponse | null>(null);
+
+    if (!pollingId) {
+        redirect('/');
+    }
 
     useEffect(() => {
-        if (!title && !pollingId) {
-            redirect('/');
+        const token = Cookies.get('accessToken') || '';
+        const getPolling = async () => {
+            const response = await apiGetPolling(token, pollingId);
+            const resp = await response.json();
+            if (response.status === 200) {
+                setPollingData(resp);
+            }
         }
-    }, [title, pollingId]);
+        getPolling();
+    }, []);
+
+    if (!pollingData) {
+        return <p>Loading...</p>;
+    }
 
 
     return (
@@ -39,15 +83,16 @@ const Polling = () => {
                     <Card className="rounded-md bg-[#1c1c1e]">
                         <CardHeader>
                             <CardTitle>
-                                <h1 className='text-white font-semibold text-center text-lg'>{title}</h1>
+                                <h1 className='text-white font-semibold text-center text-lg'>{pollingData.data.polling.title}</h1>
                             </CardTitle>
                         </CardHeader>
                         <hr className="border-gray-500 w-[90%] mx-auto" />
                         <br />
                         <CardContent className='text-center text-white'>
-                            <p>Click Button Vote</p>
-                            <Button className='rounded-md mt-4 w-[95%] bg-blue-700 hover:bg-blue-800'>option 1</Button>
-                            <Button className='rounded-md mt-4 w-[95%] bg-blue-700 hover:bg-blue-800'>option 1</Button>
+                            <p>Click Button To Vote</p>
+                            {pollingData.data.answer.map((answer, index) => (
+                                <Button key={index} className='rounded-md mt-4 w-[95%] bg-blue-700 hover:bg-blue-800'>{answer.answer}</Button>
+                            ))}
                             <div className="flex flex-row justify-center mt-3">
                                 <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
                                     <div className="flex flex-row text-white items-center cursor-pointer">
@@ -76,7 +121,7 @@ const Polling = () => {
                             </div>
                         </CardContent>
                         <CardFooter className='text-gray-400 ms-6 text-sm'>
-                            <p>Created By Eldovyn</p>
+                            <p>Created By {pollingData.data.username}</p>
                         </CardFooter>
                     </Card>
                 </div>
