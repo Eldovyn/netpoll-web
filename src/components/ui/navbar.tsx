@@ -43,9 +43,8 @@ const NavBar = () => {
         if (!accessToken) return;
         const userMe = async () => {
             const response = await apiMe(accessToken);
-            const resp = await response.json();
             if (response.status === 200) {
-                setUserData(resp.data);
+                setUserData(response.data.data);
             }
         }
     

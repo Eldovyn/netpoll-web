@@ -8,6 +8,7 @@ import { alertFailed } from "@/components/ui/alertFailed";
 import { alertSuccess } from "@/components/ui/alertSucces";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { AxiosError } from "axios";
 
 interface FormData {
     email: string;
@@ -18,6 +19,15 @@ interface FormErrors {
     email: string[];
     password: string[];
 }
+
+interface ErrorResponse {
+    message: string;
+    errors?: {
+        [field: string]: string[];
+    };
+}
+
+
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -52,44 +62,44 @@ const LoginForm = () => {
         });
     };
 
+    const handleEmailAccountActive = async (email: string) => {
+        try {
+            const response = await apiAccountActive({ email });
+            alertSuccess(response.data.message);
+            setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}/netpoll/account-active/page-verification?token=${response.data.data.token}`), 5000);
+            return;
+        } catch (error) {
+            const err = error as AxiosError<ErrorResponse>;
+            alertFailed(err.message);
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         const { email, password } = formData;
         try {
             const response = await apiLogin({ email, password });
-            const resp = await response.json();
 
-            if (response.status !== 201) {
-                if (response.status === 403) {
-                    const response = await apiAccountActive({ email });
-                    const resp = await response.json();
-                    if (response.status === 201) {
-                        alertSuccess(resp.message);
-                        setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/account-active/page-verification?token=${resp.data.token}`), 5000);
-                        return;
-                    } else {
-                        alertFailed('failed to login. please try again');
-                        return;
-                    }
-                }
-                if (response.status === 400 && resp.errors) {
-                    handleValidation(resp.errors);
-                    alertFailed(resp.message);
-                    return;
-                }
-                alertFailed(resp.message);
-                return;
-            }
-            if (response.status === 201) {
-                alertSuccess(resp.message);
-                Cookies.set('accessToken', resp.data.access_token);
-                setTimeout(() => push('/'), 5000);
-                setFormData({ email: '', password: '' });
-                return;
-            }
+            alertSuccess(response.data.message);
+            Cookies.set('accessToken', response.data.data.access_token);
+            setTimeout(() => push('/'), 5000);
+            setFormData({ email: '', password: '' });
+            return;
         } catch (error) {
-            console.error('Error during login:', error);
+            const err = error as AxiosError<ErrorResponse>;
+            if (err.response?.status === 403) {
+                return await handleEmailAccountActive(email);
+            }
+            if (err.response?.status === 400 && err.response.data.errors) {
+                handleValidation({
+                    email: err.response.data.errors.email || [],
+                    password: err.response.data.errors.password || [],
+                });
+                alertFailed(err.response.data.message);
+                return;
+            }
+            alertFailed(err.response?.data.message || err.message);
         } finally {
             setIsLoading(false);
         }

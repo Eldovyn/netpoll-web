@@ -45,24 +45,23 @@ const LoginForm = () => {
         try {
             setIsLoading(true);
             const response = await apiResetPassword({ email: formData.email });
-            const resp = await response.json();
 
             if (response.status !== 201) {
-                if (response.status === 400 && resp.errors) {
-                    handleValidation(resp.errors);
-                    alertFailed(resp.message);
+                if (response.status === 400 && response.data.errors) {
+                    handleValidation(response.data.errors);
+                    alertFailed(response.data.message);
                     return;
                 }
                 if (response.status === 404) {
-                    alertFailed(resp.message);
+                    alertFailed(response.data.message);
                     return;
                 }
-                alertFailed(resp.message);
+                alertFailed(response.data.message);
                 return;
             }
             if (response.status === 201) {
-                alertSuccess(resp.message);
-                setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/reset-password/page-reset-password?token=${resp.data.token}`), 5000);
+                alertSuccess(response.data.message);
+                setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}/netpoll/reset-password/page-reset-password?token=${response.data.data.token}`), 5000);
             }
         } catch (error) {
             console.error('Error during login:', error);

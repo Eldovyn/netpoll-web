@@ -63,21 +63,19 @@ const RegisterForm = () => {
 
         try {
             const response = await apiRegister({ username, email, password });
-            const resp = await response.json();
 
             if (response.status !== 200) {
-                if (response.status === 400 && resp.errors) {
-                    handleValidation(resp.errors);
-                    alertFailed(resp.message);
+                if (response.status === 400 && response.data.errors) {
+                    handleValidation(response.data.errors);
+                    alertFailed(response.data.message);
                     return;
                 }
             }
             if (response.status === 201) {
                 const response = await apiAccountActive({ email });
-                const resp = await response.json();
                 if (response.status === 201) {
-                    alertSuccess(resp.message);
-                    setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}netpoll/account-active/page-verification?token=${resp.data.token}`), 5000);
+                    alertSuccess(response.data.message);
+                    setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}/netpoll/account-active/page-verification?token=${response.data.data.token}`), 5000);
                     return;
                 }
             }
