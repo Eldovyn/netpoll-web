@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { TiUser } from "react-icons/ti";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LoadingSpinnerComponent from 'react-spinners-components';
-import { apiRegister, apiAccountActive } from "@/api/auth";
 import { alertFailed } from "@/components/ui/alertFailed";
 import { alertSuccess } from "@/components/ui/alertSucces";
 import { useRouter } from "next/navigation";
+import { useFormik } from 'formik';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { axiosInstance } from "@/lib/axios";
 
 interface FormData {
     username: string;
@@ -21,32 +24,74 @@ interface FormErrors {
     password: string[];
 }
 
+interface ErrorResponse {
+    message: string;
+    errors?: {
+        [field: string]: string[];
+    };
+}
+
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [formData, setFormData] = useState<FormData>({
-        username: '',
-        email: '',
-        password: '',
-    });
+    const { push } = useRouter();
+
+    const { mutate } = useMutation(
+        {
+            mutationFn: async (data: FormData) => {
+                const response = await axiosInstance.post('/netpoll/register', data);
+                return response;
+            },
+            onError: (error) => {
+                const err = error as AxiosError<ErrorResponse>;
+                if (err.response?.status === 400 && err.response.data.errors) {
+                    handleValidation({
+                        username: err.response?.data?.errors?.username ?? [],
+                        email: err.response?.data?.errors?.email ?? [],
+                        password: err.response?.data?.errors?.password ?? [],
+                    });
+                }
+                alertFailed(err.response?.data.message || err.message);
+            },
+            onSuccess: async (data) => {
+                alertSuccess(data.data.message);
+                const response = await axiosInstance.post('/netpoll/account-active', {
+                    email : data.data.data.email
+                })
+                if (response.status === 201) {
+                    setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}/netpoll/account-active/page-verification?token=${response.data.data.token}`), 5000);
+                }
+                return;
+            },
+        }
+    )
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            email: '',
+            password: '',
+        },
+        onSubmit: (values, { setSubmitting }) => {
+            try {
+                mutate({
+                    username: values.username,
+                    email: values.email,
+                    password: values.password
+                })
+            } catch (error) {
+                console.error('Terjadi kesalahan:', error);
+            } finally {
+                setSubmitting(false);
+            }
+        },
+    })
 
     const [formErrors, setFormErrors] = useState<FormErrors>({
         username: [],
         email: [],
         password: [],
     });
-
-    const { push } = useRouter();
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(prevState => !prevState);
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
 
     const handleValidation = (errors: { username: string[]; email: string[]; password: string[] }) => {
         setFormErrors({
@@ -56,38 +101,12 @@ const RegisterForm = () => {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsLoading(true);
-        const { username, email, password } = formData;
-
-        try {
-            const response = await apiRegister({ username, email, password });
-
-            if (response.status !== 200) {
-                if (response.status === 400 && response.data.errors) {
-                    handleValidation(response.data.errors);
-                    alertFailed(response.data.message);
-                    return;
-                }
-            }
-            if (response.status === 201) {
-                const response = await apiAccountActive({ email });
-                if (response.status === 201) {
-                    alertSuccess(response.data.message);
-                    setTimeout(() => push(`${process.env.NEXT_PUBLIC_NETPOLL_API}/netpoll/account-active/page-verification?token=${response.data.data.token}`), 5000);
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Error during registration:', error);
-        } finally {
-            setIsLoading(false);
-        }
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
     };
 
     return (
-        <form onSubmit={isLoading ? () => {} : handleSubmit}>
+        <form onSubmit={formik.isSubmitting ? () => { } : formik.handleSubmit}>
             <div className="p-4 text-white">
                 <div className={`relative ${formErrors.username.length > 0 ? 'mb-2' : 'mb-5'}`}>
                     <TiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
@@ -95,9 +114,9 @@ const RegisterForm = () => {
                         placeholder="username"
                         className="pl-10 w-full"
                         type="text"
-                        onChange={handleInputChange}
+                        onChange={formik.handleChange}
                         name="username"
-                        value={formData.username}
+                        value={formik.values.username}
                     />
                 </div>
                 {formErrors.username.map((error, index) => (
@@ -110,9 +129,9 @@ const RegisterForm = () => {
                         placeholder="email address"
                         className="pl-10 w-full"
                         type="text"
-                        onChange={handleInputChange}
+                        onChange={formik.handleChange}
                         name="email"
-                        value={formData.email}
+                        value={formik.values.email}
                     />
                 </div>
                 {formErrors.email.map((error, index) => (
@@ -125,9 +144,9 @@ const RegisterForm = () => {
                         placeholder="password"
                         className="pl-10 pr-10 w-full"
                         type={showPassword ? "text" : "password"}
-                        onChange={handleInputChange}
+                        onChange={formik.handleChange}
                         name="password"
-                        value={formData.password}
+                        value={formik.values.password}
                     />
                     <span
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
@@ -141,7 +160,7 @@ const RegisterForm = () => {
                 ))}
             </div>
             <Button className={`bg-blue-700 hover:bg-blue-800 w-[95%] flex mx-auto rounded-md ${formErrors.password.length > 0 ? 'mt-1' : 'mt-5'}`} type="submit">
-                {isLoading ? (
+                {formik.isSubmitting ? (
                     <div className="flex flex-row text-white items-center cursor-pointer">
                         <LoadingSpinnerComponent type={'Spinner'} color={'white'} size={'100px'} />
                         <p className="ms-1">Register</p>
