@@ -8,8 +8,9 @@ import { FaSearch } from 'react-icons/fa';
 import { IoSaveSharp } from 'react-icons/io5';
 import { useMediaQuery } from 'react-responsive';
 import { RiAccountCircleFill } from "react-icons/ri";
-import { apiMe } from '@/api/auth';
 import Cookies from 'js-cookie';
+import { useQuery } from '@tanstack/react-query';
+import { axiosInstance } from '@/lib/axios';
 
 interface UserData {
     access_token: string;
@@ -24,32 +25,17 @@ const NavBar = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-    const [accessToken, setAccessToken] = useState(Cookies.get('accessToken') || '');
-
-    const [userData, setUserData] = useState<UserData>({
-        access_token: '',
-        avatar: '',
-        email: '',
-        is_active: false,
-        user_id: '',
-        username: '',
-    });
+    const { data, isLoading } = useQuery({
+        queryKey: ['me'],
+        queryFn: async () => {
+            const response = await axiosInstance.get('/netpoll/@me', { headers: { "Content-Type": "application/json", "Authorization": `Bearer ${Cookies.get('accessToken') || ''}` } });
+            return response;
+        },
+    })
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
-
-    useEffect(() => {
-        if (!accessToken) return;
-        const userMe = async () => {
-            const response = await apiMe(accessToken);
-            if (response.status === 200) {
-                setUserData(response.data.data);
-            }
-        }
-    
-        userMe();
-    }, [accessToken]);
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
@@ -134,9 +120,9 @@ const NavBar = () => {
                                         <p className="me-1 ms-1 text-[#999999]">Account</p>
                                     ) : (
                                         <div className="flex flex-row text-white items-center cursor-pointer">
-                                            {userData?.avatar ? (
+                                            {data?.data?.avatar ? (
                                                 <Image
-                                                    src={userData?.avatar}
+                                                    src={data?.data?.avatar}
                                                     alt="User Avatar"
                                                     width={20}
                                                     height={20}
