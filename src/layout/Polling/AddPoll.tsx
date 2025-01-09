@@ -6,7 +6,6 @@ import { FaQuestion } from "react-icons/fa";
 import { MdOutlineAdd, MdDelete, MdQuestionAnswer } from "react-icons/md";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";
-import { apiAddPolling } from "@/api/polling";
 import Cookies from "js-cookie";
 import LoadingSpinnerComponent from 'react-spinners-components';
 import { alertFailed } from "@/components/ui/alertFailed";
@@ -53,23 +52,6 @@ const AddPoll: React.FC = () => {
         const accessToken = Cookies.get('accessToken') || '';
         try {
             setLoading(true);
-
-            const response = await apiAddPolling(accessToken, {
-                title: question,
-                answer: options,
-                private: settings.private,
-                multi_choice: settings.multiChoice,
-                disable_comment: settings.disableComment,
-            });
-            const resp = await response.json();
-            if (response.status === 201) {
-                alertSuccess(resp.message);
-                setTimeout(() => push(`${process.env.NEXT_PUBLIC_BASE_URL}polling?pollingId=${resp.data.polling.polling_id}`), 5000);
-                return;
-            } else {
-                alertFailed(resp.message);
-                return;
-            }
         }
         catch (error) {
             console.error(error);
