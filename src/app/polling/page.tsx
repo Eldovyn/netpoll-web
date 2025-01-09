@@ -157,7 +157,7 @@ const Polling = () => {
                                 </div>
                             </CardContent>
                             <CardFooter className='text-gray-400 ms-6 text-sm'>
-                                <p>Created By {data?.data?.username}</p>
+                                <p>Created By {data?.data?.data?.username}</p>
                             </CardFooter>
                         </Card>
                     </div>
