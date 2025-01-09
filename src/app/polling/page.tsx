@@ -53,7 +53,7 @@ const Polling = () => {
         redirect('/');
     }
 
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: ['polling', pollingId],
         queryFn: async () => {
             const response = await axiosInstance.get(`/netpoll/polling?polling_id=${pollingId}`, {
@@ -95,78 +95,89 @@ const Polling = () => {
         );
     }
 
-    return (
-        <>
-            <NavBar />
-            <section className="w-full min-h-screen bg-black flex-row pt-8 pb-5 items-center justify-center">
-                {showSpinner ? (
-                    <LoadingSpinnerComponent type={'Spinner'} color={'white'} size={'100px'} />
-                ) : isLoading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <>
-                        <div className="bg-black w-[80%] mx-auto rounded-md p-8 mt-[3rem]">
-                            <Card className="rounded-md bg-[#1c1c1e]">
-                                <CardHeader>
-                                    <CardTitle>
-                                        <h1 className='text-white font-semibold text-center text-lg'>{data?.data?.data?.polling.title}</h1>
-                                    </CardTitle>
-                                </CardHeader>
-                                <hr className="border-gray-500 w-[90%] mx-auto" />
-                                <br />
-                                <CardContent className='text-center text-white'>
-                                    <p>Click Button To Vote</p>
-                                    {data?.data?.data?.answer.map((answer: { answer: string }, index: number) => (
-                                        <Button key={index} className='rounded-md mt-4 w-[95%] bg-blue-700 hover:bg-blue-800'>{answer.answer}</Button>
-                                    ))}
-                                    <div className="flex flex-row justify-center mt-3">
-                                        <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
-                                            <div className="flex flex-row text-white items-center cursor-pointer">
-                                                <MdSaveAlt size={16} className="text-[#999999]" />
-                                                <p className="me-1 ms-1">Save Polling</p>
-                                            </div>
-                                        </Button>
-                                        <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
-                                            <div className="flex flex-row text-white items-center cursor-pointer">
-                                                <FaDatabase size={16} className="text-[#999999]" />
-                                                <p className="me-1 ms-1">Result Polling</p>
-                                            </div>
-                                        </Button>
-                                        <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
-                                            <div className="flex flex-row text-white items-center cursor-pointer">
-                                                <FaShareAlt size={16} className="text-[#999999]" />
-                                                <p className="me-1 ms-1">Share Polling</p>
-                                            </div>
-                                        </Button>
-                                        <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
-                                            <div className="flex flex-row text-white items-center cursor-pointer">
-                                                <MdOutlineAdd size={16} className="text-[#999999]" />
-                                                <p className="me-1 ms-1">Create Polling</p>
-                                            </div>
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                                <CardFooter className='text-gray-400 ms-6 text-sm'>
-                                    <p>Created By {data?.data?.username}</p>
-                                </CardFooter>
-                            </Card>
-                        </div>
-                        <div className="bg-black w-[80%] mx-auto rounded-md p-8 mt-2">
-                            <Card className='rounded-md bg-[#1c1c1e]'>
-                                <CardHeader className='text-center'>
-                                    <CardTitle className='text-white text-lg'>Comentar</CardTitle>
-                                    <CardDescription className='text-white text-sm'>Enter your comment</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Form category='comment' />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </>
-                )}
-            </section>
-        </>
-    );
+    if (isLoading) {
+        return (
+            <>
+                <NavBar />
+                <section className="w-full min-h-screen bg-black flex-row pt-8 pb-5 items-center justify-center">
+                    {showSpinner ? (
+                        <LoadingSpinnerComponent type={'Spinner'} color={'white'} size={'100px'} />
+                    ) : (
+                        <p></p>
+                    )}
+                </section>
+            </>
+        );
+    }
+
+    if (!isError && data) {
+        return (
+            <>
+                <NavBar />
+                <section className="w-full min-h-screen bg-black flex-row pt-8 pb-5 items-center justify-center">
+                    <div className="bg-black w-[80%] mx-auto rounded-md p-8 mt-[3rem]">
+                        <Card className="rounded-md bg-[#1c1c1e]">
+                            <CardHeader>
+                                <CardTitle>
+                                    <h1 className='text-white font-semibold text-center text-lg'>{data?.data?.data?.polling.title}</h1>
+                                </CardTitle>
+                            </CardHeader>
+                            <hr className="border-gray-500 w-[90%] mx-auto" />
+                            <br />
+                            <CardContent className='text-center text-white'>
+                                <p>Click Button To Vote</p>
+                                {data?.data?.data?.answer.map((answer: { answer: string }, index: number) => (
+                                    <Button key={index} className='rounded-md mt-4 w-[95%] bg-blue-700 hover:bg-blue-800'>{answer.answer}</Button>
+                                ))}
+                                <div className="flex flex-row justify-center mt-3">
+                                    <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
+                                        <div className="flex flex-row text-white items-center cursor-pointer">
+                                            <MdSaveAlt size={16} className="text-[#999999]" />
+                                            <p className="me-1 ms-1">Save Polling</p>
+                                        </div>
+                                    </Button>
+                                    <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
+                                        <div className="flex flex-row text-white items-center cursor-pointer">
+                                            <FaDatabase size={16} className="text-[#999999]" />
+                                            <p className="me-1 ms-1">Result Polling</p>
+                                        </div>
+                                    </Button>
+                                    <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
+                                        <div className="flex flex-row text-white items-center cursor-pointer">
+                                            <FaShareAlt size={16} className="text-[#999999]" />
+                                            <p className="me-1 ms-1">Share Polling</p>
+                                        </div>
+                                    </Button>
+                                    <Button className='rounded-md bg-green-700 hover:bg-green-800 ms-1 me-1'>
+                                        <div className="flex flex-row text-white items-center cursor-pointer">
+                                            <MdOutlineAdd size={16} className="text-[#999999]" />
+                                            <p className="me-1 ms-1">Create Polling</p>
+                                        </div>
+                                    </Button>
+                                </div>
+                            </CardContent>
+                            <CardFooter className='text-gray-400 ms-6 text-sm'>
+                                <p>Created By {data?.data?.username}</p>
+                            </CardFooter>
+                        </Card>
+                    </div>
+                    <div className="bg-black w-[80%] mx-auto rounded-md p-8 mt-2">
+                        <Card className='rounded-md bg-[#1c1c1e]'>
+                            <CardHeader className='text-center'>
+                                <CardTitle className='text-white text-lg'>Comentar</CardTitle>
+                                <CardDescription className='text-white text-sm'>Enter your comment</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Form category='comment' />
+                            </CardContent>
+                        </Card>
+                    </div>
+                </section>
+            </>
+        );
+    }
+
+    return null;
 };
 
 export default Polling;
