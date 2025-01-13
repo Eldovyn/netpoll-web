@@ -5,72 +5,69 @@ import { Button } from "@/components/ui/button";
 import { FaQuestion } from "react-icons/fa";
 import { MdOutlineAdd, MdDelete, MdQuestionAnswer } from "react-icons/md";
 import { Checkbox } from "@/components/ui/checkbox";
-import React, { useState } from "react";
+import React from "react";
 import Cookies from "js-cookie";
-import LoadingSpinnerComponent from 'react-spinners-components';
+import LoadingSpinnerComponent from "react-spinners-components";
 import { alertFailed } from "@/components/ui/alertFailed";
 import { alertSuccess } from "@/components/ui/alertSucces";
 import { useRouter } from "next/navigation";
+import { useFormik } from "formik";
+
+interface PollSettings {
+    private: boolean;
+    multiChoice: boolean;
+    disableComment: boolean;
+}
 
 const AddPoll: React.FC = () => {
-    const [options, setOptions] = useState<string[]>(["", ""]);
-    const [settings, setSettings] = useState({
-        private: false,
-        multiChoice: false,
-        disableComment: false,
-    });
-    const [question, setQuestion] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const { push } = useRouter();
 
-    const handleOptionChange = (value: string, index: number) => {
-        setOptions((prevOptions) => {
-            const updatedOptions = [...prevOptions];
-            updatedOptions[index] = value;
-            return updatedOptions;
-        });
-    };
-
-    const removeOption = (index: number) => {
-        setOptions((prevOptions) => prevOptions.filter((_, i) => i !== index));
-    };
-
-    const addOption = () => {
-        setOptions((prevOptions) => [...prevOptions, ""]);
-    };
-
-    const handleSettingChange = (key: keyof typeof settings, value: boolean) => {
-        setSettings((prevSettings) => ({
-            ...prevSettings,
-            [key]: value,
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const accessToken = Cookies.get('accessToken') || '';
-        try {
-            setLoading(true);
-        }
-        catch (error) {
-            console.error(error);
-        }
-        finally {
-            setLoading(false);
-            setQuestion("");
-            setOptions(["", ""]);
-            setSettings({
+    const formik = useFormik({
+        initialValues: {
+            options: ["", ""],
+            settings: {
                 private: false,
                 multiChoice: false,
                 disableComment: false,
-            });
-        }
+            },
+            question: "",
+        },
+        onSubmit: async (values, { setSubmitting }) => {
+            try {
+                // 
+            } catch (error) {
+                // 
+            } finally {
+                console.log(values);
+                setSubmitting(false);
+            }
+        },
+    });
+
+    const handleOptionChange = (value: string, index: number) => {
+        const updatedOptions = [...formik.values.options];
+        updatedOptions[index] = value;
+        formik.setFieldValue("options", updatedOptions);
     };
 
+    const removeOption = (index: number) => {
+        const updatedOptions = formik.values.options.filter((_, i) => i !== index);
+        formik.setFieldValue("options", updatedOptions);
+    };
+
+    const addOption = () => {
+        formik.setFieldValue("options", [...formik.values.options, ""]);
+    };
+
+    const handleSettingChange = (key: keyof PollSettings, value: boolean) => {
+        formik.setFieldValue("settings", {
+            ...formik.values.settings,
+            [key]: value,
+        });
+    };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={formik.isSubmitting ? () => {} : formik.handleSubmit}>
             <div className="mb-3">
                 <div className="mb-5 relative">
                     <FaQuestion
@@ -80,14 +77,16 @@ const AddPoll: React.FC = () => {
                     <Textarea
                         placeholder="Question"
                         className="pl-10 pt-7 pb-2 w-full text-white"
-                        id="question" value={question} onChange={(e) => setQuestion(e.target.value)}
+                        id="question"
+                        value={formik.values.question}
+                        onChange={formik.handleChange}
                     />
                 </div>
             </div>
             <Label htmlFor="options" className="text-white">
                 Answer Options
             </Label>
-            {options.map((option, index) => (
+            {formik.values.options.map((option, index) => (
                 <div className="mb-3 flex" key={index}>
                     <div className="relative flex-1">
                         <MdQuestionAnswer
@@ -133,9 +132,9 @@ const AddPoll: React.FC = () => {
                 <div className="flex flex-row text-[#999999] items-center cursor-pointer mb-1">
                     <Checkbox
                         className="border border-[#999999] me-2"
-                        checked={settings.private}
+                        checked={formik.values.settings.private}
                         onCheckedChange={(checked) =>
-                            handleSettingChange("private", checked as boolean)
+                            handleSettingChange("private", Boolean(checked))
                         }
                     />
                     <p className="text-sm">Private</p>
@@ -143,9 +142,9 @@ const AddPoll: React.FC = () => {
                 <div className="flex flex-row text-[#999999] items-center cursor-pointer mb-1">
                     <Checkbox
                         className="border border-[#999999] me-2"
-                        checked={settings.multiChoice}
+                        checked={formik.values.settings.multiChoice}
                         onCheckedChange={(checked) =>
-                            handleSettingChange("multiChoice", checked as boolean)
+                            handleSettingChange("multiChoice", Boolean(checked))
                         }
                     />
                     <p className="text-sm">Multi Choice</p>
@@ -153,16 +152,19 @@ const AddPoll: React.FC = () => {
                 <div className="flex flex-row text-[#999999] items-center cursor-pointer mb-1">
                     <Checkbox
                         className="border border-[#999999] me-2"
-                        checked={settings.disableComment}
+                        checked={formik.values.settings.disableComment}
                         onCheckedChange={(checked) =>
-                            handleSettingChange("disableComment", checked as boolean)
+                            handleSettingChange("disableComment", Boolean(checked))
                         }
                     />
                     <p className="text-sm">Disable Comment</p>
                 </div>
             </div>
-            <Button className="bg-blue-700 w-full hover:bg-blue-800" type="submit">
-                Submit
+            <Button
+                className="bg-blue-700 w-full hover:bg-blue-800"
+                type="submit"
+            >
+                {formik.isSubmitting ? <LoadingSpinnerComponent size={20} /> : "Submit"}
             </Button>
         </form>
     );
