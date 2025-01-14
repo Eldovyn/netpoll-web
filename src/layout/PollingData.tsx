@@ -5,6 +5,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 
 
 interface PollingData {
@@ -44,6 +53,22 @@ const PollingList = ({ data }: { data: { polling: PollingData[] } }) => {
                     </React.Fragment>
                 );
             })}
+            <Pagination>
+                <PaginationContent className="text-white">
+                    <PaginationItem className="bg-blue-600 rounded-sm cursor-pointer">
+                        <PaginationPrevious href="#" className="hover:bg-blue-800 hover:text-white"/>
+                    </PaginationItem>
+                    <PaginationItem className="bg-blue-600 rounded-sm cursor-pointer">
+                        <PaginationLink href="#"  className="hover:bg-blue-800 hover:text-white">1</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem className="bg-blue-600 rounded-sm cursor-pointer">
+                        <PaginationEllipsis className="hover:bg-blue-800 hover:text-white"/>
+                    </PaginationItem>
+                    <PaginationItem className="bg-blue-600  rounded-sm cursor-pointer">
+                        <PaginationNext href="#" className="hover:bg-blue-800 hover:text-white"/>
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </>
     );
 };
