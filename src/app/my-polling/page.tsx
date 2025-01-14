@@ -22,16 +22,6 @@ interface ErrorResponse {
     };
 }
 
-interface PollingData {
-    created_at: number;
-    disable_comment: boolean;
-    multi_choice: boolean;
-    polling_id: string;
-    private: boolean;
-    title: string;
-    updated_at: number;
-}
-
 const MyPolling = () => {
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['my-polling'],
@@ -100,7 +90,7 @@ const MyPolling = () => {
                         <br />
                         <Form category="search-poll" />
                         <br />
-                        <PaginationPage data={data?.data.data} category="my-polling"/>
+                        <PaginationPage data={data?.data} category="my-polling"/>
                     </div>
                 </section>
             </>

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 
 
-interface PollingData {
+interface Polling {
     created_at: number;
     disable_comment: boolean;
     multi_choice: boolean;
@@ -17,16 +17,36 @@ interface PollingData {
     updated_at: number;
 }
 
-interface PollingProps {
-    data: {
-        polling: PollingData[];
-    };
+interface PollingPage {
+    current_page: number;
+    per_page: number;
+    pollings: Polling[][];
+    size: number;
+    total_page: number;
 }
 
-const PollingList: React.FC<PollingProps> = ({ data }) => {
+interface PollingData {
+    polling: Polling[];
+    user_id: string;
+    username: string;
+}
+
+interface PollingResponse {
+    data: PollingData;
+    message: string;
+    page: PollingPage;
+}
+
+interface PollingListProps {
+    currentPage: number;
+    data: PollingResponse;
+}
+
+const PollingList: React.FC<PollingListProps> = ({ data, currentPage }) => {
+
     return (
         <>
-            {data.polling.map((item: PollingData, index: number) => {
+            {data.page.pollings[currentPage].map((item: Polling, index: number) => {
                 const date = new Date(item.updated_at * 1000);
 
                 const year = date.getUTCFullYear();
