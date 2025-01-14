@@ -1,12 +1,6 @@
 'use client'
 import NavBar from "@/components/ui/navbar"
 import Form from "@/layout/Form"
-import {
-    Card,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import { useQuery } from "@tanstack/react-query"
 import { axiosInstance } from "@/lib/axios"
 import Cookies from "js-cookie"
@@ -14,6 +8,11 @@ import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react"
 import LoadingSpinnerComponent from 'react-spinners-components';
 import PaginationPage from "@/layout/Pagination"
+import { useFormik } from "formik";
+import { useMutation } from "@tanstack/react-query";
+import { alertSuccess } from "@/components/ui/alertSucces"
+import { alertFailed } from "@/components/ui/alertFailed"
+import { ToastContainer } from 'react-toastify';
 
 interface ErrorResponse {
     message: string;
@@ -22,7 +21,42 @@ interface ErrorResponse {
     };
 }
 
+interface FormData {
+    title: string;
+}
+
 const MyPolling = () => {
+    const { mutate } = useMutation({
+        mutationFn: async (data: FormData) => {
+            const response = await axiosInstance.get('/netpoll/my-polling/search', {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${Cookies.get('accessToken') || ''}`
+                },
+                params: data
+            });
+            return response;
+        },
+        onError: async (error) => {
+            const err = error as AxiosError<ErrorResponse>;
+            alertFailed(err.response?.data.message || err.message);
+        },
+        onSuccess: async (data) => {
+            alertSuccess(data.data.message);
+        },
+    })
+
+    const formik = useFormik({
+        initialValues: {
+            title: '',
+        },
+        onSubmit: async (values) => {
+            mutate({
+                title: values.title
+            })
+        },
+    })
+
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['my-polling'],
         queryFn: async () => {
@@ -88,11 +122,12 @@ const MyPolling = () => {
                         <h1 className="text-white text-start text-lg font-semibold pb-2">My Polling</h1>
                         <hr className="border-gray-800" />
                         <br />
-                        <Form category="search-poll" />
+                        <Form category="search-poll" formik={formik} />
                         <br />
                         <PaginationPage data={data?.data} category="my-polling"/>
                     </div>
                 </section>
+                <ToastContainer />
             </>
         )
     }
