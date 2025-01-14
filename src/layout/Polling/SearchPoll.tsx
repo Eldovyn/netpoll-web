@@ -14,7 +14,7 @@ interface SearchPollProps {
 const SearchPoll: React.FC<SearchPollProps> = ({ width, formik }) => {
     return (
         <>
-            <form onSubmit={formik?.handleSubmit} className="mb-1 flex">
+            <form onSubmit={formik?.isSubmitting ? () => {} : formik?.handleSubmit} className="mb-1 flex">
                 <div className="relative flex-1">
                     <FaQuestion className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={13} />
                     <Input
