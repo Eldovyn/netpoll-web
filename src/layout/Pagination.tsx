@@ -63,14 +63,13 @@ const PaginationPage: React.FC<PollingListProps> = ({ category, data }) => {
     const renderPaginationItems = () => {
         const pageItems = [];
         const totalPages = data.page.total_page;
-        const maxVisiblePages = 8; // Max number of pagination buttons including ellipses
+        const maxVisiblePages = 5;
         const startPage = Math.max(currentPage - 3, 1);
         const endPage = Math.min(currentPage + 3, totalPages);
 
         let visiblePagesCount = 0;
 
         for (let i = 1; i <= totalPages; i++) {
-            // Only show a maximum of `maxVisiblePages` pagination items
             if (i < startPage || i > endPage) {
                 if (visiblePagesCount < maxVisiblePages) {
                     if (i === startPage - 1 || i === endPage + 1) {
