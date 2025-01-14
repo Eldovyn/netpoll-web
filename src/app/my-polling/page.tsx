@@ -13,7 +13,7 @@ import Cookies from "js-cookie"
 import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react"
 import LoadingSpinnerComponent from 'react-spinners-components';
-import PollingList from "@/layout/PollingData"
+import PaginationPage from "@/layout/Pagination"
 
 interface ErrorResponse {
     message: string;
@@ -100,7 +100,7 @@ const MyPolling = () => {
                         <br />
                         <Form category="search-poll" />
                         <br />
-                        <PollingList data={data?.data.data} />
+                        <PaginationPage data={data?.data.data} category="my-polling"/>
                     </div>
                 </section>
             </>
